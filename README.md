@@ -3,6 +3,11 @@
 The `guerystring` package can encode Go struct into URL query strings.
 Now only the string type is supported.
 
+## Usage
+```go
+import "github.com/lookharm/guerystring"
+```
+
 ## Example
 ```go
 type Request struct {
