@@ -6,22 +6,36 @@ import (
 	"strings"
 )
 
+var errNotStruct = fmt.Errorf("guerystring: x is not struct")
+
 func Encode(x interface{}) (string, error) {
-	var sb strings.Builder
-	t := reflect.TypeOf(x)
 	v := reflect.ValueOf(x)
-	numField := t.NumField()
+
+	if v.Kind() != reflect.Struct {
+		return "", errNotStruct
+	}
+
+	var (
+		sb       strings.Builder
+		numField = v.NumField()
+	)
 
 	for i := 0; i < numField; i++ {
-		name, ok := t.Field(i).Tag.Lookup("query")
+		name, ok := v.Type().Field(i).Tag.Lookup("query")
 		if !ok {
 			continue
 		}
-		value := v.Field(i).Interface()
 
-		sb.WriteString(fmt.Sprintf("%s=%v", name, value))
+		value, ok := v.Field(i).Interface().(string)
+		if !ok {
+			continue
+		}
+
+		sb.WriteString(name)
+		sb.WriteByte('=')
+		sb.WriteString(value)
 		if i < numField-1 {
-			sb.WriteRune('&')
+			sb.WriteByte('&')
 		}
 	}
 
