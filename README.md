@@ -17,10 +17,10 @@ type Request struct {
 }
 
 r := Request{
-    String1: "1",
-    String2: "2",
-    String3: "3",
+    String1: "string1",
+    String2: "string2",
+    String3: "string3",
 }
 
-query, err := Encode(r)
+query, err := Encode(r) // string1=string1&string2=string2&string3=string3
 ```
